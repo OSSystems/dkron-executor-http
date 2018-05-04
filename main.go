@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/pkg/errors"
 )
 
 type Arguments struct {
@@ -57,6 +59,10 @@ func doRequest(args *Arguments) ([]byte, error) {
 	out, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode >= 300 {
+		return out, errors.Errorf("response status code: %d", resp.StatusCode)
 	}
 
 	return out, nil
