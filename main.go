@@ -35,7 +35,12 @@ func main() {
 
 	out, err := doRequest(args)
 	if err != nil {
-		fmt.Println(err)
+		if len(out) > 0 {
+			fmt.Println(string(out))
+		} else {
+			fmt.Println(err)
+		}
+
 		os.Exit(1)
 	}
 
