@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gustavosbarreto/dkron-http-executor/pkg/executorhttp"
+	"github.com/OSSystems/dkron-executor-http/pkg/executorhttp"
 	"github.com/pkg/errors"
 )
 
