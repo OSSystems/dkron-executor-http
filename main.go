@@ -22,18 +22,21 @@ type Arguments struct {
 func main() {
 	stdin, err := ioutil.ReadAll(bufio.NewReader(os.Stdin))
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	args := &Arguments{}
 
 	if err = json.Unmarshal(stdin, args); err != nil {
-		panic(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	out, err := doRequest(args)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	fmt.Print(string(out))
