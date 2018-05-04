@@ -3,21 +3,14 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 
+	"github.com/gustavosbarreto/dkron-http-executor/pkg/executorhttp"
 	"github.com/pkg/errors"
 )
-
-type Arguments struct {
-	URL    string            `json:"url"`
-	Method string            `json:"method"`
-	Header map[string]string `json:"header"`
-	Body   []byte            `json:"body"`
-}
 
 func main() {
 	stdin, err := ioutil.ReadAll(bufio.NewReader(os.Stdin))
@@ -26,14 +19,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	args := &Arguments{}
-
-	if err = json.Unmarshal(stdin, args); err != nil {
+	req, err := executorhttp.NewRequest(stdin)
+	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	out, err := doRequest(args)
+	out, err := doRequest(req)
 	if err != nil {
 		if len(out) > 0 {
 			fmt.Println(string(out))
@@ -47,7 +39,7 @@ func main() {
 	fmt.Print(string(out))
 }
 
-func doRequest(args *Arguments) ([]byte, error) {
+func doRequest(args *executorhttp.Request) ([]byte, error) {
 	cli := &http.Client{}
 
 	req, err := http.NewRequest(args.Method, args.URL, bytes.NewReader(args.Body))
